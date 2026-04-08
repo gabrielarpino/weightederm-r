@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-  <a href="https://doi.org/10.5281/zenodo.19462775">
-    <img src="https://zenodo.org/badge/1204283258.svg" alt="DOI">
+  <a href="https://doi.org/10.5281/zenodo.19472923">
+    <img src="https://zenodo.org/badge/1205016507.svg" alt="DOI">
   </a>
   <br>
   <a href="https://CRAN.R-project.org/package=weightederm">
