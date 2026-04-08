@@ -1,12 +1,26 @@
-# weightederm <img src="man/figures/logo.svg" align="right" height="139" alt="" />
+# 𐄷 Weighted ERM - fast & accurate change point regression in R
+
+---
+
+<p align="center">
+  <img src="man/figures/raw_marginal_plot_5.svg" alt="weightederm" style="width: 100%; max-width: 800px; height: auto;">
+</p>
+
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.19462775">
+    <img src="https://zenodo.org/badge/1204283258.svg" alt="DOI">
+  </a>
+  <br>
+  <a href="https://CRAN.R-project.org/package=weightederm">
+    <img src="https://www.r-pkg.org/badges/version/weightederm" alt="CRAN status">
+  </a>
+  <a href="https://github.com/gabrielarpino/weightederm-r/actions/workflows/R-CMD-check.yaml">
+    <img src="https://github.com/gabrielarpino/weightederm-r/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check">
+  </a>
+</p>
 
 > R interface to the [weightederm](https://github.com/gabrielarpino/weightederm)
-> Python package — changepoint detection via Weighted Empirical Risk Minimization (WERM).
-
-<!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/weightederm)](https://CRAN.R-project.org/package=weightederm)
-[![R-CMD-check](https://github.com/gabrielarpino/weightederm-r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gabrielarpino/weightederm-r/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
+> Python package — changepoint regression via Weighted Empirical Risk Minimization (WERM).
 
 ## Overview
 
@@ -14,7 +28,7 @@
 Weighted Empirical Risk (WERM). The method is described in:
 
 > Arpino & Venkataramanan, *Inferring Change Points in Regression via Sample
-> Weighting*, JRSSB (forthcoming).
+> Weighting*, (forthcoming).
 
 Six estimators are available:
 
@@ -202,9 +216,8 @@ predict(fit, X_new)  # numeric predictions (regression) or class labels / probab
 
 ## Related resources
 
-- [weightederm Python package](https://github.com/gabrielarpino/weightederm) — full Python API, docs, benchmark notebook
-- [User Guide](https://github.com/gabrielarpino/weightederm/blob/main/docs/user_guide.md)
-- [Parameter Reference](https://github.com/gabrielarpino/weightederm/blob/main/docs/parameter_reference.md)
+- [User Guide](docs/user_guide.md) — algorithm overview, fixed vs CV, penalties, prediction, S3 methods (with tested R examples)
+- [weightederm Python package](https://github.com/gabrielarpino/weightederm) — Python API, parameter reference, benchmark notebook
 
 ## License
 
