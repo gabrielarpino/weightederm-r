@@ -17,7 +17,7 @@ print.werm_fit <- function(x, ...) {
     x$.estimator_type
   )
 
-  cat("WERM Changepoint Estimator —", loss_label, "\n")
+  cat("WERM Changepoint Estimator ", loss_label, "\n")
   cat(sprintf("  Changepoints : %s (1-indexed)\n",
               if (length(x$changepoints) == 0) "none"
               else paste(x$changepoints, collapse = ", ")))
