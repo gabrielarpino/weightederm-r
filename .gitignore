@@ -3,6 +3,3 @@
 *.Rcheck/
 *.Rhistory
 .Rproj.user/
-
-# Tarballs are built locally into this folder; never commit them
-tarballs/
