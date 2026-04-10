@@ -6,10 +6,10 @@ Authors@R: c(
     person("Gabriel", "Arpino", role = c("aut", "cre"),
            email = "arpino.gabriel@gmail.com"))
 Description: R interface to the 'weightederm' Python package, which provides
-    scikit-learn-style estimators for offline changepoint regression (data
-    segmentation) via Weighted Empirical Risk Minimization (WERM). Supports
+    'scikit-learn'-style estimators for offline changepoint regression (data
+    segmentation) via Weighted Empirical Risk Minimization ('WERM'). Supports
     least-squares, Huber, and logistic losses with fixed or cross-validated
-    number of changepoints. Wraps Python via 'reticulate'.
+    number of 'changepoints'. Wraps Python via 'reticulate'.
 License: Apache License (>= 2.0)
 URL: https://github.com/gabrielarpino/weightederm-r
 BugReports: https://github.com/gabrielarpino/weightederm-r/issues
