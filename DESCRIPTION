@@ -1,15 +1,15 @@
 Package: weightederm
 Type: Package
-Title: Weighted Empirical Risk Minimization for Changepoint Detection
+Title: Weighted Empirical Risk Minimization for Changepoint Regression
 Version: 0.1.0
 Authors@R: c(
     person("Gabriel", "Arpino", role = c("aut", "cre"),
-           email = "gabriel.arpino@mail.utoronto.ca"))
+           email = "arpino.gabriel@gmail.com"))
 Description: R interface to the 'weightederm' Python package, which provides
-    scikit-learn-style estimators for changepoint detection via Weighted
-    Empirical Risk Minimization (WERM). Supports least-squares, Huber, and
-    logistic losses with fixed or cross-validated number of changepoints.
-    Wraps Python via 'reticulate'.
+    scikit-learn-style estimators for offline changepoint regression (data
+    segmentation) via Weighted Empirical Risk Minimization (WERM). Supports
+    least-squares, Huber, and logistic losses with fixed or cross-validated
+    number of changepoints. Wraps Python via 'reticulate'.
 License: Apache License (>= 2.0)
 URL: https://github.com/gabrielarpino/weightederm-r
 BugReports: https://github.com/gabrielarpino/weightederm-r/issues

@@ -43,7 +43,7 @@ Six estimators are available:
 This package calls Python via [reticulate](https://rstudio.github.io/reticulate/).
 You need:
 
-1. **Python ≥ 3.9** — install from <https://python.org> or via conda/pyenv.
+1. **Python ≥ 3.9** — install from <https://www.python.org/> or via conda/pyenv.
 2. **The `weightederm` Python package:**
 
 ```bash
@@ -216,7 +216,7 @@ predict(fit, X_new)  # numeric predictions (regression) or class labels / probab
 
 ## Related resources
 
-- [User Guide](docs/user_guide.md) — algorithm overview, fixed vs CV, penalties, prediction, S3 methods (with tested R examples)
+- [User Guide](https://github.com/gabrielarpino/weightederm-r/blob/main/docs/user_guide.md) — algorithm overview, fixed vs CV, penalties, prediction, S3 methods (with tested R examples)
 - [weightederm Python package](https://github.com/gabrielarpino/weightederm) — Python API, parameter reference, benchmark notebook
 
 ## License
