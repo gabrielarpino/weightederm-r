@@ -7,6 +7,7 @@
 </p>
 
 <p align="center">
+  <a href="https://arxiv.org/abs/2604.11746"><img src="https://img.shields.io/badge/arXiv-2604.11746-b31b1b.svg" alt="arXiv"></a>
   <a href="https://doi.org/10.5281/zenodo.19472923">
     <img src="https://zenodo.org/badge/1205016507.svg" alt="DOI">
   </a>
