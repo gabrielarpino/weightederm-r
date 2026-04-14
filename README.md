@@ -21,6 +21,7 @@
 
 > R interface to the [weightederm](https://github.com/gabrielarpino/weightederm)
 > Python package — changepoint regression via Weighted Empirical Risk Minimization (WERM).
+> Paper: [Inferring Change Points in Regression via Sample Weighting](https://arxiv.org/abs/2604.11746) by Gabriel Arpino and Ramji Venkataramanan. 
 
 ## Overview
 
