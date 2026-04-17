@@ -11,14 +11,17 @@ weightederm_configure_python(python, required = TRUE)
 
 \item{required}{Passed to \code{\link[reticulate:use_python]{reticulate::use_python()}}.}
 }
+\value{
+Invisibly returns \code{NULL}. Called for side effects only.
+}
 \description{
 A thin wrapper around \code{\link[reticulate:use_python]{reticulate::use_python()}} that must be called
 \strong{before} any \verb{werm_*} function if the default Python does not have
 \code{weightederm} installed.
 }
 \examples{
-\dontrun{
-weightederm_configure_python("~/.venv/bin/python")
+if (nzchar(Sys.which("python"))) {
+  weightederm_configure_python(Sys.which("python"), required = FALSE)
 }
 
 }

@@ -5,11 +5,13 @@ Version: 0.1.0
 Authors@R: c(
     person("Gabriel", "Arpino", role = c("aut", "cre"),
            email = "arpino.gabriel@gmail.com"))
-Description: R interface to the 'weightederm' Python package, which provides
+Description: R interface to the 'weightederm' 'Python' package, which provides
     'scikit-learn'-style estimators for offline changepoint regression (data
-    segmentation) via Weighted Empirical Risk Minimization ('WERM'). Supports
+    segmentation) via Weighted Empirical Risk Minimization (WERM). Supports
     least-squares, Huber, and logistic losses with fixed or cross-validated
-    number of 'changepoints'. Wraps Python via 'reticulate'.
+    number of changepoints. Wraps 'Python' via 'reticulate'. The method is
+    described in Arpino and Venkataramanan (2026) "Inferring Change Points in
+    Regression via Sample Weighting" <doi:10.48550/arXiv.2604.11746>.
 License: Apache License (>= 2.0)
 URL: https://github.com/gabrielarpino/weightederm-r
 BugReports: https://github.com/gabrielarpino/weightederm-r/issues

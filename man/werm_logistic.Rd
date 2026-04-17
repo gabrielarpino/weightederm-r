@@ -53,16 +53,19 @@ sorted order. \code{classes[2]} is the positive class.}
 Detects \code{num_chgpts} changepoints in ordered binary classification data.
 }
 \examples{
-\dontrun{
-set.seed(3)
-n <- 100; p <- 4; true_cp <- 50
-X <- matrix(rnorm(n * p), n, p)
-eta <- c(X[1:true_cp, ] \%*\% c(2, -2, 0, 0),
-         X[(true_cp+1):n, ] \%*\% c(-2, 2, 0, 0))
-y <- rbinom(n, 1, 1 / (1 + exp(-eta)))
-fit <- werm_logistic(X, y, num_chgpts = 1, delta = 5L, fit_intercept = FALSE)
-fit$changepoints
-fit$classes
+if (reticulate::py_module_available("weightederm")) {
+  set.seed(3)
+  n <- 60L; p <- 2L; true_cp <- 30L
+  X <- matrix(rnorm(n * p), n, p)
+  eta <- c(
+    X[1:true_cp, ] \%*\% c(2, -2),
+    X[(true_cp + 1L):n, ] \%*\% c(-2, 2)
+  )
+  y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
+  fit <- werm_logistic(X, y, num_chgpts = 1L, delta = 4L,
+                       fit_intercept = FALSE, max_iter = 200L)
+  fit$changepoints
+  fit$classes
 }
 
 }

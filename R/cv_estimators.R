@@ -36,17 +36,20 @@
 #'   }
 #'
 #' @examples
-#' \dontrun{
-#' set.seed(10)
-#' n <- 90; p <- 2
-#' X <- matrix(rnorm(n * p), n, p)
-#' y <- c(X[1:30, ] %*% c(3, 0), X[31:60, ] %*% c(-3, 0),
-#'        X[61:90, ] %*% c(3, 0)) + rnorm(n, sd = 0.1)
-#' fit <- werm_least_squares_cv(X, y, max_num_chgpts = 3, cv = 3L, delta = 5L,
-#'                              fit_intercept = FALSE)
-#' fit$best_num_chgpts
-#' fit$changepoints
-#' fit$cv_results
+#' if (reticulate::py_module_available("weightederm")) {
+#'   set.seed(10)
+#'   n <- 45L; p <- 2L
+#'   X <- matrix(rnorm(n * p), n, p)
+#'   y <- c(
+#'     X[1:15, ] %*% c(3, 0),
+#'     X[16:30, ] %*% c(-3, 0),
+#'     X[31:45, ] %*% c(3, 0)
+#'   ) + rnorm(n, sd = 0.1)
+#'   fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 3L,
+#'                                delta = 4L, fit_intercept = FALSE)
+#'   fit$best_num_chgpts
+#'   fit$changepoints
+#'   fit$cv_results
 #' }
 #'
 #' @export
@@ -92,14 +95,17 @@ werm_least_squares_cv <- function(
 #' @return An object of class `c("werm_huber_cv", "werm_fit")`.
 #'
 #' @examples
-#' \dontrun{
-#' set.seed(11)
-#' n <- 80; p <- 2
-#' X <- matrix(rnorm(n * p), n, p)
-#' y <- c(X[1:40, ] %*% c(2, 0), X[41:80, ] %*% c(-2, 0)) + rnorm(n, sd = 0.1)
-#' fit <- werm_huber_cv(X, y, max_num_chgpts = 2, cv = 3L, delta = 5L,
-#'                      fit_intercept = FALSE)
-#' fit$best_num_chgpts
+#' if (reticulate::py_module_available("weightederm")) {
+#'   set.seed(11)
+#'   n <- 40L; p <- 2L
+#'   X <- matrix(rnorm(n * p), n, p)
+#'   y <- c(
+#'     X[1:20, ] %*% c(2, 0),
+#'     X[21:40, ] %*% c(-2, 0)
+#'   ) + rnorm(n, sd = 0.1)
+#'   fit <- werm_huber_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 4L,
+#'                        fit_intercept = FALSE)
+#'   fit$best_num_chgpts
 #' }
 #'
 #' @export
@@ -156,17 +162,19 @@ werm_huber_cv <- function(
 #'   Contains all CV elements plus `classes` (character vector of length 2).
 #'
 #' @examples
-#' \dontrun{
-#' set.seed(12)
-#' n <- 100; p <- 4
-#' X <- matrix(rnorm(n * p), n, p)
-#' eta <- c(X[1:50, ] %*% c(2, -2, 0, 0),
-#'          X[51:100, ] %*% c(-2, 2, 0, 0))
-#' y <- rbinom(n, 1, 1 / (1 + exp(-eta)))
-#' fit <- werm_logistic_cv(X, y, max_num_chgpts = 2, cv = 3L, delta = 5L,
-#'                         fit_intercept = FALSE)
-#' fit$best_num_chgpts
-#' fit$changepoints
+#' if (reticulate::py_module_available("weightederm")) {
+#'   set.seed(12)
+#'   n <- 60L; p <- 2L
+#'   X <- matrix(rnorm(n * p), n, p)
+#'   eta <- c(
+#'     X[1:30, ] %*% c(2, -2),
+#'     X[31:60, ] %*% c(-2, 2)
+#'   )
+#'   y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
+#'   fit <- werm_logistic_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 4L,
+#'                           fit_intercept = FALSE, max_iter = 200L)
+#'   fit$best_num_chgpts
+#'   fit$changepoints
 #' }
 #'
 #' @export

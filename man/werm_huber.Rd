@@ -53,14 +53,17 @@ Like \code{\link[=werm_least_squares]{werm_least_squares()}} but uses the Huber 
 to outliers than squared loss.
 }
 \examples{
-\dontrun{
-set.seed(2)
-n <- 80; p <- 3; true_cp <- 40
-X <- matrix(rnorm(n * p), n, p)
-y <- c(X[1:true_cp, ] \%*\% c(1, 0, 0),
-       X[(true_cp+1):n, ] \%*\% c(-1, 0, 0)) + rnorm(n, sd = 0.2)
-fit <- werm_huber(X, y, num_chgpts = 1, delta = 5L, fit_intercept = FALSE)
-fit$changepoints
+if (reticulate::py_module_available("weightederm")) {
+  set.seed(2)
+  n <- 40L; p <- 2L; true_cp <- 20L
+  X <- matrix(rnorm(n * p), n, p)
+  y <- c(
+    X[1:true_cp, ] \%*\% c(1, 0),
+    X[(true_cp + 1L):n, ] \%*\% c(-1, 0)
+  ) + rnorm(n, sd = 0.2)
+  fit <- werm_huber(X, y, num_chgpts = 1L, delta = 4L,
+                    fit_intercept = FALSE)
+  fit$changepoints
 }
 
 }

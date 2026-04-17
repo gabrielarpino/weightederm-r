@@ -57,14 +57,17 @@ An object of class \code{c("werm_huber_cv", "werm_fit")}.
 Fit a WERM changepoint model with Huber loss and CV selection
 }
 \examples{
-\dontrun{
-set.seed(11)
-n <- 80; p <- 2
-X <- matrix(rnorm(n * p), n, p)
-y <- c(X[1:40, ] \%*\% c(2, 0), X[41:80, ] \%*\% c(-2, 0)) + rnorm(n, sd = 0.1)
-fit <- werm_huber_cv(X, y, max_num_chgpts = 2, cv = 3L, delta = 5L,
-                     fit_intercept = FALSE)
-fit$best_num_chgpts
+if (reticulate::py_module_available("weightederm")) {
+  set.seed(11)
+  n <- 40L; p <- 2L
+  X <- matrix(rnorm(n * p), n, p)
+  y <- c(
+    X[1:20, ] \%*\% c(2, 0),
+    X[21:40, ] \%*\% c(-2, 0)
+  ) + rnorm(n, sd = 0.1)
+  fit <- werm_huber_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 4L,
+                       fit_intercept = FALSE)
+  fit$best_num_chgpts
 }
 
 }

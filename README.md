@@ -81,8 +81,8 @@ By default, `reticulate` auto-discovers Python. If it picks the wrong one, call
 # Option 1 — point to a specific Python binary
 weightederm_configure_python(python = "/path/to/your/venv/bin/python")
 
-# Option 2 — use a conda environment
-weightederm_configure_python(conda = "my_conda_env")
+# Option 2 — point to the Python binary inside a conda environment
+weightederm_configure_python("/path/to/miniconda/envs/my_conda_env/bin/python")
 ```
 
 You can also set the `RETICULATE_PYTHON` environment variable in your

@@ -54,17 +54,19 @@ Contains all CV elements plus \code{classes} (character vector of length 2).
 Fit a WERM changepoint model with logistic loss and CV selection
 }
 \examples{
-\dontrun{
-set.seed(12)
-n <- 100; p <- 4
-X <- matrix(rnorm(n * p), n, p)
-eta <- c(X[1:50, ] \%*\% c(2, -2, 0, 0),
-         X[51:100, ] \%*\% c(-2, 2, 0, 0))
-y <- rbinom(n, 1, 1 / (1 + exp(-eta)))
-fit <- werm_logistic_cv(X, y, max_num_chgpts = 2, cv = 3L, delta = 5L,
-                        fit_intercept = FALSE)
-fit$best_num_chgpts
-fit$changepoints
+if (reticulate::py_module_available("weightederm")) {
+  set.seed(12)
+  n <- 60L; p <- 2L
+  X <- matrix(rnorm(n * p), n, p)
+  eta <- c(
+    X[1:30, ] \%*\% c(2, -2),
+    X[31:60, ] \%*\% c(-2, 2)
+  )
+  y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
+  fit <- werm_logistic_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 4L,
+                          fit_intercept = FALSE, max_iter = 200L)
+  fit$best_num_chgpts
+  fit$changepoints
 }
 
 }

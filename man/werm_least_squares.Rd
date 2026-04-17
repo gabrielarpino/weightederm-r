@@ -61,15 +61,17 @@ Detects \code{num_chgpts} changepoints in ordered regression data by minimising
 a Weighted Empirical Risk with squared loss.
 }
 \examples{
-\dontrun{
-set.seed(1)
-n <- 80; p <- 4; true_cp <- 40
-X <- matrix(rnorm(n * p), n, p)
-y <- c(X[1:true_cp, ] \%*\% c(2, -1, 0, 0),
-       X[(true_cp+1):n, ] \%*\% c(-1, 2, 0, 0)) + rnorm(n, sd = 0.1)
-fit <- werm_least_squares(X, y, num_chgpts = 1, delta = 5L,
-                          fit_intercept = FALSE)
-fit$changepoints
+if (reticulate::py_module_available("weightederm")) {
+  set.seed(1)
+  n <- 40L; p <- 2L; true_cp <- 20L
+  X <- matrix(rnorm(n * p), n, p)
+  y <- c(
+    X[1:true_cp, ] \%*\% c(2, -1),
+    X[(true_cp + 1L):n, ] \%*\% c(-1, 2)
+  ) + rnorm(n, sd = 0.1)
+  fit <- werm_least_squares(X, y, num_chgpts = 1L, delta = 4L,
+                            fit_intercept = FALSE)
+  fit$changepoints
 }
 
 }

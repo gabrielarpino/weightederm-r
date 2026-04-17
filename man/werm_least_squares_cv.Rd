@@ -61,17 +61,20 @@ Selects the number of changepoints from \verb{\{0, …, max_num_chgpts\}} by
 interleaved cross-validation, then refits on the full data.
 }
 \examples{
-\dontrun{
-set.seed(10)
-n <- 90; p <- 2
-X <- matrix(rnorm(n * p), n, p)
-y <- c(X[1:30, ] \%*\% c(3, 0), X[31:60, ] \%*\% c(-3, 0),
-       X[61:90, ] \%*\% c(3, 0)) + rnorm(n, sd = 0.1)
-fit <- werm_least_squares_cv(X, y, max_num_chgpts = 3, cv = 3L, delta = 5L,
-                             fit_intercept = FALSE)
-fit$best_num_chgpts
-fit$changepoints
-fit$cv_results
+if (reticulate::py_module_available("weightederm")) {
+  set.seed(10)
+  n <- 45L; p <- 2L
+  X <- matrix(rnorm(n * p), n, p)
+  y <- c(
+    X[1:15, ] \%*\% c(3, 0),
+    X[16:30, ] \%*\% c(-3, 0),
+    X[31:45, ] \%*\% c(3, 0)
+  ) + rnorm(n, sd = 0.1)
+  fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 3L,
+                               delta = 4L, fit_intercept = FALSE)
+  fit$best_num_chgpts
+  fit$changepoints
+  fit$cv_results
 }
 
 }

@@ -44,9 +44,11 @@
 #' @param python Path to the Python binary or virtual-environment directory.
 #' @param required Passed to [reticulate::use_python()].
 #'
+#' @return Invisibly returns \code{NULL}. Called for side effects only.
+#'
 #' @examples
-#' \dontrun{
-#' weightederm_configure_python("~/.venv/bin/python")
+#' if (nzchar(Sys.which("python"))) {
+#'   weightederm_configure_python(Sys.which("python"), required = FALSE)
 #' }
 #'
 #' @export
