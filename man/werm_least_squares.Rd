@@ -61,15 +61,24 @@ Detects \code{num_chgpts} changepoints in ordered regression data by minimising
 a Weighted Empirical Risk with squared loss.
 }
 \examples{
-if (reticulate::py_module_available("weightederm")) {
+# Limit BLAS/OpenMP threads so example CPU time stays proportional to
+# elapsed time on multicore CRAN machines.
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  BLAS_NUM_THREADS = "1"
+)
+
+if (weightederm:::.weightederm_examples_available("WERMLeastSquares")) {
   set.seed(1)
-  n <- 40L; p <- 2L; true_cp <- 20L
+  n <- 24L; p <- 2L; true_cp <- 12L
   X <- matrix(rnorm(n * p), n, p)
   y <- c(
-    X[1:true_cp, ] \%*\% c(2, -1),
-    X[(true_cp + 1L):n, ] \%*\% c(-1, 2)
-  ) + rnorm(n, sd = 0.1)
-  fit <- werm_least_squares(X, y, num_chgpts = 1L, delta = 4L,
+    X[1:true_cp, ] \%*\% c(3, -1.5),
+    X[(true_cp + 1L):n, ] \%*\% c(-3, 1.5)
+  ) + rnorm(n, sd = 0.05)
+  fit <- werm_least_squares(X, y, num_chgpts = 1L, delta = 3L,
                             fit_intercept = FALSE)
   fit$changepoints
 }

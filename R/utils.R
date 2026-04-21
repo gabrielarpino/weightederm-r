@@ -12,6 +12,67 @@
   reticulate::r_to_py(as.numeric(y))
 }
 
+#' @noRd
+.weightederm_module_has_attrs <- function(module, attrs) {
+  attrs <- as.character(attrs)
+
+  if (length(attrs) == 0L) {
+    return(TRUE)
+  }
+
+  py_attrs_present <- all(vapply(
+    attrs,
+    function(attr) {
+      tryCatch(
+        reticulate::py_has_attr(module, attr),
+        error = function(e) FALSE
+      )
+    },
+    logical(1)
+  ))
+
+  if (py_attrs_present) {
+    return(TRUE)
+  }
+
+  if (is.environment(module)) {
+    return(all(vapply(
+      attrs,
+      exists,
+      logical(1),
+      where = module,
+      inherits = FALSE
+    )))
+  }
+
+  if (is.list(module)) {
+    return(all(attrs %in% names(module)))
+  }
+
+  FALSE
+}
+
+#' @noRd
+.weightederm_examples_available <- function(required_attrs = character(),
+                                            module = NULL) {
+  if (is.null(module)) {
+    if (!reticulate::py_module_available("weightederm")) {
+      return(FALSE)
+    }
+
+    module <- tryCatch(
+      reticulate::import("weightederm", delay_load = FALSE),
+      error = function(e) NULL
+    )
+
+    if (is.null(module)) {
+      return(FALSE)
+    }
+  }
+
+  .weightederm_module_has_attrs(module, required_attrs)
+}
+
 # ---------------------------------------------------------------------------
 # Extracting fitted attributes from a Python estimator
 # ---------------------------------------------------------------------------

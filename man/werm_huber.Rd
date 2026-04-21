@@ -53,16 +53,25 @@ Like \code{\link[=werm_least_squares]{werm_least_squares()}} but uses the Huber 
 to outliers than squared loss.
 }
 \examples{
-if (reticulate::py_module_available("weightederm")) {
+# Limit BLAS/OpenMP threads so example CPU time stays proportional to
+# elapsed time on multicore CRAN machines.
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  BLAS_NUM_THREADS = "1"
+)
+
+if (weightederm:::.weightederm_examples_available("WERMHuber")) {
   set.seed(2)
-  n <- 40L; p <- 2L; true_cp <- 20L
+  n <- 20L; p <- 2L; true_cp <- 10L
   X <- matrix(rnorm(n * p), n, p)
   y <- c(
-    X[1:true_cp, ] \%*\% c(1, 0),
-    X[(true_cp + 1L):n, ] \%*\% c(-1, 0)
-  ) + rnorm(n, sd = 0.2)
-  fit <- werm_huber(X, y, num_chgpts = 1L, delta = 4L,
-                    fit_intercept = FALSE)
+    X[1:true_cp, ] \%*\% c(2.5, 0),
+    X[(true_cp + 1L):n, ] \%*\% c(-2.5, 0)
+  ) + rnorm(n, sd = 0.05)
+  fit <- werm_huber(X, y, num_chgpts = 1L, delta = 2L,
+                    fit_intercept = FALSE, max_iter = 10L)
   fit$changepoints
 }
 

@@ -53,17 +53,26 @@ sorted order. \code{classes[2]} is the positive class.}
 Detects \code{num_chgpts} changepoints in ordered binary classification data.
 }
 \examples{
-if (reticulate::py_module_available("weightederm")) {
+# Limit BLAS/OpenMP threads so example CPU time stays proportional to
+# elapsed time on multicore CRAN machines.
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  BLAS_NUM_THREADS = "1"
+)
+
+if (weightederm:::.weightederm_examples_available("WERMLogistic")) {
   set.seed(3)
-  n <- 60L; p <- 2L; true_cp <- 30L
+  n <- 30L; p <- 2L; true_cp <- 15L
   X <- matrix(rnorm(n * p), n, p)
   eta <- c(
-    X[1:true_cp, ] \%*\% c(2, -2),
-    X[(true_cp + 1L):n, ] \%*\% c(-2, 2)
+    X[1:true_cp, ] \%*\% c(3, -3),
+    X[(true_cp + 1L):n, ] \%*\% c(-3, 3)
   )
   y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
-  fit <- werm_logistic(X, y, num_chgpts = 1L, delta = 4L,
-                       fit_intercept = FALSE, max_iter = 200L)
+  fit <- werm_logistic(X, y, num_chgpts = 1L, delta = 3L,
+                       fit_intercept = FALSE, max_iter = 100L)
   fit$changepoints
   fit$classes
 }

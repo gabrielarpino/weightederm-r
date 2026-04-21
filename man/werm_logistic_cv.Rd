@@ -54,17 +54,27 @@ Contains all CV elements plus \code{classes} (character vector of length 2).
 Fit a WERM changepoint model with logistic loss and CV selection
 }
 \examples{
-if (reticulate::py_module_available("weightederm")) {
+# Limit BLAS/OpenMP threads so example CPU time stays proportional to
+# elapsed time on multicore CRAN machines.
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  BLAS_NUM_THREADS = "1"
+)
+
+if (weightederm:::.weightederm_examples_available("WERMLogisticCV")) {
   set.seed(12)
-  n <- 60L; p <- 2L
+  n <- 30L; p <- 2L
   X <- matrix(rnorm(n * p), n, p)
   eta <- c(
-    X[1:30, ] \%*\% c(2, -2),
-    X[31:60, ] \%*\% c(-2, 2)
+    X[1:10, ] \%*\% c(3, -3),
+    X[11:20, ] \%*\% c(-3, 3),
+    X[21:30, ] \%*\% c(3, -3)
   )
   y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
-  fit <- werm_logistic_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 4L,
-                          fit_intercept = FALSE, max_iter = 200L)
+  fit <- werm_logistic_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 3L,
+                          fit_intercept = FALSE, max_iter = 100L)
   fit$best_num_chgpts
   fit$changepoints
 }

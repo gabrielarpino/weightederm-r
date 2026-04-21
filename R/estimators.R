@@ -38,15 +38,24 @@
 #'   }
 #'
 #' @examples
-#' if (reticulate::py_module_available("weightederm")) {
+#' # Limit BLAS/OpenMP threads so example CPU time stays proportional to
+#' # elapsed time on multicore CRAN machines.
+#' Sys.setenv(
+#'   OMP_NUM_THREADS = "1",
+#'   OPENBLAS_NUM_THREADS = "1",
+#'   MKL_NUM_THREADS = "1",
+#'   BLAS_NUM_THREADS = "1"
+#' )
+#'
+#' if (weightederm:::.weightederm_examples_available("WERMLeastSquares")) {
 #'   set.seed(1)
-#'   n <- 40L; p <- 2L; true_cp <- 20L
+#'   n <- 24L; p <- 2L; true_cp <- 12L
 #'   X <- matrix(rnorm(n * p), n, p)
 #'   y <- c(
-#'     X[1:true_cp, ] %*% c(2, -1),
-#'     X[(true_cp + 1L):n, ] %*% c(-1, 2)
-#'   ) + rnorm(n, sd = 0.1)
-#'   fit <- werm_least_squares(X, y, num_chgpts = 1L, delta = 4L,
+#'     X[1:true_cp, ] %*% c(3, -1.5),
+#'     X[(true_cp + 1L):n, ] %*% c(-3, 1.5)
+#'   ) + rnorm(n, sd = 0.05)
+#'   fit <- werm_least_squares(X, y, num_chgpts = 1L, delta = 3L,
 #'                             fit_intercept = FALSE)
 #'   fit$changepoints
 #' }
@@ -97,16 +106,25 @@ werm_least_squares <- function(
 #'   Same elements as [werm_least_squares()].
 #'
 #' @examples
-#' if (reticulate::py_module_available("weightederm")) {
+#' # Limit BLAS/OpenMP threads so example CPU time stays proportional to
+#' # elapsed time on multicore CRAN machines.
+#' Sys.setenv(
+#'   OMP_NUM_THREADS = "1",
+#'   OPENBLAS_NUM_THREADS = "1",
+#'   MKL_NUM_THREADS = "1",
+#'   BLAS_NUM_THREADS = "1"
+#' )
+#'
+#' if (weightederm:::.weightederm_examples_available("WERMHuber")) {
 #'   set.seed(2)
-#'   n <- 40L; p <- 2L; true_cp <- 20L
+#'   n <- 20L; p <- 2L; true_cp <- 10L
 #'   X <- matrix(rnorm(n * p), n, p)
 #'   y <- c(
-#'     X[1:true_cp, ] %*% c(1, 0),
-#'     X[(true_cp + 1L):n, ] %*% c(-1, 0)
-#'   ) + rnorm(n, sd = 0.2)
-#'   fit <- werm_huber(X, y, num_chgpts = 1L, delta = 4L,
-#'                     fit_intercept = FALSE)
+#'     X[1:true_cp, ] %*% c(2.5, 0),
+#'     X[(true_cp + 1L):n, ] %*% c(-2.5, 0)
+#'   ) + rnorm(n, sd = 0.05)
+#'   fit <- werm_huber(X, y, num_chgpts = 1L, delta = 2L,
+#'                     fit_intercept = FALSE, max_iter = 10L)
 #'   fit$changepoints
 #' }
 #'
@@ -165,17 +183,26 @@ werm_huber <- function(
 #'   }
 #'
 #' @examples
-#' if (reticulate::py_module_available("weightederm")) {
+#' # Limit BLAS/OpenMP threads so example CPU time stays proportional to
+#' # elapsed time on multicore CRAN machines.
+#' Sys.setenv(
+#'   OMP_NUM_THREADS = "1",
+#'   OPENBLAS_NUM_THREADS = "1",
+#'   MKL_NUM_THREADS = "1",
+#'   BLAS_NUM_THREADS = "1"
+#' )
+#'
+#' if (weightederm:::.weightederm_examples_available("WERMLogistic")) {
 #'   set.seed(3)
-#'   n <- 60L; p <- 2L; true_cp <- 30L
+#'   n <- 30L; p <- 2L; true_cp <- 15L
 #'   X <- matrix(rnorm(n * p), n, p)
 #'   eta <- c(
-#'     X[1:true_cp, ] %*% c(2, -2),
-#'     X[(true_cp + 1L):n, ] %*% c(-2, 2)
+#'     X[1:true_cp, ] %*% c(3, -3),
+#'     X[(true_cp + 1L):n, ] %*% c(-3, 3)
 #'   )
 #'   y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
-#'   fit <- werm_logistic(X, y, num_chgpts = 1L, delta = 4L,
-#'                        fit_intercept = FALSE, max_iter = 200L)
+#'   fit <- werm_logistic(X, y, num_chgpts = 1L, delta = 3L,
+#'                        fit_intercept = FALSE, max_iter = 100L)
 #'   fit$changepoints
 #'   fit$classes
 #' }

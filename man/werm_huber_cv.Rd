@@ -57,16 +57,26 @@ An object of class \code{c("werm_huber_cv", "werm_fit")}.
 Fit a WERM changepoint model with Huber loss and CV selection
 }
 \examples{
-if (reticulate::py_module_available("weightederm")) {
+# Limit BLAS/OpenMP threads so example CPU time stays proportional to
+# elapsed time on multicore CRAN machines.
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  BLAS_NUM_THREADS = "1"
+)
+
+if (weightederm:::.weightederm_examples_available("WERMHuberCV")) {
   set.seed(11)
-  n <- 40L; p <- 2L
+  n <- 24L; p <- 2L
   X <- matrix(rnorm(n * p), n, p)
   y <- c(
-    X[1:20, ] \%*\% c(2, 0),
-    X[21:40, ] \%*\% c(-2, 0)
-  ) + rnorm(n, sd = 0.1)
-  fit <- werm_huber_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 4L,
-                       fit_intercept = FALSE)
+    X[1:8, ] \%*\% c(4, 0),
+    X[9:16, ] \%*\% c(-4, 0),
+    X[17:24, ] \%*\% c(4, 0)
+  ) + rnorm(n, sd = 0.02)
+  fit <- werm_huber_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 2L,
+                       fit_intercept = FALSE, max_iter = 20L)
   fit$best_num_chgpts
 }
 

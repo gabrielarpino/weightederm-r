@@ -1,3 +1,13 @@
+## Limit numpy/BLAS threading so that CPU time stays proportional to
+## elapsed time on multi-core CRAN check machines (avoids the
+## "CPU time > 2.5 times elapsed" NOTE on Debian).
+Sys.setenv(
+  OMP_NUM_THREADS    = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS    = "1",
+  BLAS_NUM_THREADS   = "1"
+)
+
 ## Point reticulate at the project venv that has weightederm installed.
 ## Skip all tests if Python / weightederm is unavailable.
 ## During testthat execution, getwd() is <pkg>/tests/testthat/.
@@ -14,10 +24,18 @@ if (file.exists(PYTHON_PATH)) {
 }
 
 weightederm_available <- tryCatch({
-  reticulate::import("weightederm")
-  TRUE
+  weightederm:::.weightederm_examples_available(
+    c(
+      "WERMLeastSquares",
+      "WERMLeastSquaresCV",
+      "WERMHuber",
+      "WERMHuberCV",
+      "WERMLogistic",
+      "WERMLogisticCV"
+    )
+  )
 }, error = function(e) FALSE)
 
 if (!weightederm_available) {
-  message("weightederm Python package not found — skipping all tests.")
+  message("compatible weightederm Python package not found — skipping all tests.")
 }

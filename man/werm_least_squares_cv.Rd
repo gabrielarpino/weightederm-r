@@ -61,17 +61,26 @@ Selects the number of changepoints from \verb{\{0, …, max_num_chgpts\}} by
 interleaved cross-validation, then refits on the full data.
 }
 \examples{
-if (reticulate::py_module_available("weightederm")) {
+# Limit BLAS/OpenMP threads so example CPU time stays proportional to
+# elapsed time on multicore CRAN machines.
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  BLAS_NUM_THREADS = "1"
+)
+
+if (weightederm:::.weightederm_examples_available("WERMLeastSquaresCV")) {
   set.seed(10)
-  n <- 45L; p <- 2L
+  n <- 30L; p <- 2L
   X <- matrix(rnorm(n * p), n, p)
   y <- c(
-    X[1:15, ] \%*\% c(3, 0),
-    X[16:30, ] \%*\% c(-3, 0),
-    X[31:45, ] \%*\% c(3, 0)
-  ) + rnorm(n, sd = 0.1)
+    X[1:10, ] \%*\% c(3.5, 0),
+    X[11:20, ] \%*\% c(-3.5, 0),
+    X[21:30, ] \%*\% c(3.5, 0)
+  ) + rnorm(n, sd = 0.05)
   fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 3L,
-                               delta = 4L, fit_intercept = FALSE)
+                               delta = 3L, fit_intercept = FALSE)
   fit$best_num_chgpts
   fit$changepoints
   fit$cv_results
