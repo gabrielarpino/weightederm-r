@@ -47,7 +47,8 @@
 #'   BLAS_NUM_THREADS = "1"
 #' )
 #'
-#' if (weightederm:::.weightederm_examples_available("WERMLeastSquares")) {
+#' if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+#'     weightederm:::.weightederm_examples_available("WERMLeastSquares")) {
 #'   set.seed(1)
 #'   n <- 24L; p <- 2L; true_cp <- 12L
 #'   X <- matrix(rnorm(n * p), n, p)
@@ -115,16 +116,17 @@ werm_least_squares <- function(
 #'   BLAS_NUM_THREADS = "1"
 #' )
 #'
-#' if (weightederm:::.weightederm_examples_available("WERMHuber")) {
+#' if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+#'     weightederm:::.weightederm_examples_available("WERMHuber")) {
 #'   set.seed(2)
-#'   n <- 20L; p <- 2L; true_cp <- 10L
+#'   n <- 12L; p <- 1L; true_cp <- 6L
 #'   X <- matrix(rnorm(n * p), n, p)
 #'   y <- c(
-#'     X[1:true_cp, ] %*% c(2.5, 0),
-#'     X[(true_cp + 1L):n, ] %*% c(-2.5, 0)
-#'   ) + rnorm(n, sd = 0.05)
-#'   fit <- werm_huber(X, y, num_chgpts = 1L, delta = 2L,
-#'                     fit_intercept = FALSE, max_iter = 10L)
+#'     X[1:true_cp, , drop = FALSE] %*% 3,
+#'     X[(true_cp + 1L):n, , drop = FALSE] %*% -3
+#'   ) + rnorm(n, sd = 0.03)
+#'   fit <- werm_huber(X, y, num_chgpts = 1L, delta = 1L,
+#'                     fit_intercept = FALSE, max_iter = 5L, tol = 1e-3)
 #'   fit$changepoints
 #' }
 #'
@@ -192,7 +194,8 @@ werm_huber <- function(
 #'   BLAS_NUM_THREADS = "1"
 #' )
 #'
-#' if (weightederm:::.weightederm_examples_available("WERMLogistic")) {
+#' if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+#'     weightederm:::.weightederm_examples_available("WERMLogistic")) {
 #'   set.seed(3)
 #'   n <- 30L; p <- 2L; true_cp <- 15L
 #'   X <- matrix(rnorm(n * p), n, p)

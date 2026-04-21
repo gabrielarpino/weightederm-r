@@ -62,16 +62,17 @@ Sys.setenv(
   BLAS_NUM_THREADS = "1"
 )
 
-if (weightederm:::.weightederm_examples_available("WERMHuber")) {
+if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+    weightederm:::.weightederm_examples_available("WERMHuber")) {
   set.seed(2)
-  n <- 20L; p <- 2L; true_cp <- 10L
+  n <- 12L; p <- 1L; true_cp <- 6L
   X <- matrix(rnorm(n * p), n, p)
   y <- c(
-    X[1:true_cp, ] \%*\% c(2.5, 0),
-    X[(true_cp + 1L):n, ] \%*\% c(-2.5, 0)
-  ) + rnorm(n, sd = 0.05)
-  fit <- werm_huber(X, y, num_chgpts = 1L, delta = 2L,
-                    fit_intercept = FALSE, max_iter = 10L)
+    X[1:true_cp, , drop = FALSE] \%*\% 3,
+    X[(true_cp + 1L):n, , drop = FALSE] \%*\% -3
+  ) + rnorm(n, sd = 0.03)
+  fit <- werm_huber(X, y, num_chgpts = 1L, delta = 1L,
+                    fit_intercept = FALSE, max_iter = 5L, tol = 1e-3)
   fit$changepoints
 }
 

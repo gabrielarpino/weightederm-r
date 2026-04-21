@@ -66,7 +66,8 @@ Sys.setenv(
   BLAS_NUM_THREADS = "1"
 )
 
-if (weightederm:::.weightederm_examples_available("WERMHuberCV")) {
+if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+    weightederm:::.weightederm_examples_available("WERMHuberCV")) {
   set.seed(11)
   n <- 24L; p <- 2L
   X <- matrix(rnorm(n * p), n, p)

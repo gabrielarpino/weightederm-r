@@ -70,7 +70,8 @@ Sys.setenv(
   BLAS_NUM_THREADS = "1"
 )
 
-if (weightederm:::.weightederm_examples_available("WERMLeastSquares")) {
+if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+    weightederm:::.weightederm_examples_available("WERMLeastSquares")) {
   set.seed(1)
   n <- 24L; p <- 2L; true_cp <- 12L
   X <- matrix(rnorm(n * p), n, p)

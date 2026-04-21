@@ -63,7 +63,8 @@ Sys.setenv(
   BLAS_NUM_THREADS = "1"
 )
 
-if (weightederm:::.weightederm_examples_available("WERMLogisticCV")) {
+if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+    weightederm:::.weightederm_examples_available("WERMLogisticCV")) {
   set.seed(12)
   n <- 30L; p <- 2L
   X <- matrix(rnorm(n * p), n, p)

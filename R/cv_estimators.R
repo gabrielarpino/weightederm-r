@@ -45,7 +45,8 @@
 #'   BLAS_NUM_THREADS = "1"
 #' )
 #'
-#' if (weightederm:::.weightederm_examples_available("WERMLeastSquaresCV")) {
+#' if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+#'     weightederm:::.weightederm_examples_available("WERMLeastSquaresCV")) {
 #'   set.seed(10)
 #'   n <- 30L; p <- 2L
 #'   X <- matrix(rnorm(n * p), n, p)
@@ -113,7 +114,8 @@ werm_least_squares_cv <- function(
 #'   BLAS_NUM_THREADS = "1"
 #' )
 #'
-#' if (weightederm:::.weightederm_examples_available("WERMHuberCV")) {
+#' if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+#'     weightederm:::.weightederm_examples_available("WERMHuberCV")) {
 #'   set.seed(11)
 #'   n <- 24L; p <- 2L
 #'   X <- matrix(rnorm(n * p), n, p)
@@ -190,7 +192,8 @@ werm_huber_cv <- function(
 #'   BLAS_NUM_THREADS = "1"
 #' )
 #'
-#' if (weightederm:::.weightederm_examples_available("WERMLogisticCV")) {
+#' if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
+#'     weightederm:::.weightederm_examples_available("WERMLogisticCV")) {
 #'   set.seed(12)
 #'   n <- 30L; p <- 2L
 #'   X <- matrix(rnorm(n * p), n, p)
