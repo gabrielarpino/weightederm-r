@@ -12,13 +12,15 @@
 #' @param num_chgpts Integer. Number of changepoints to detect.
 #' @param delta Integer. Minimum gap between candidate changepoints during
 #'   search. Default `1`. Rule of thumb: `max(1L, as.integer(0.05 * nrow(X)))`.
-#' @param search_method Character. `"efficient"` (default) or `"brute_force"`.
+#' @param search_method Character. `"dp"` (default), `"efficient"` (legacy greedy), or `"brute_force"`.
 #' @param fit_intercept Logical. Whether each segment model includes an
 #'   intercept. Default `TRUE`.
 #' @param fit_solver Character. `"direct"` (default, closed-form) or
 #'   `"lbfgsb"` (gradient-based).
 #' @param penalty Character. `"none"` (default), `"l1"`, or `"l2"`.
 #' @param alpha Numeric. Penalty strength. Default `0`.
+#' @param marginal_weights Optional signal-by-observation occupancy probabilities.
+#'   Columns sum to one; supplied rows are normalized for coefficient fitting.
 #'
 #' @return An object of class `c("werm_least_squares", "werm_fit")` with the
 #'   following named elements:
@@ -66,11 +68,12 @@ werm_least_squares <- function(
     X, y,
     num_chgpts,
     delta          = 1L,
-    search_method  = "efficient",
+    search_method  = "dp",
     fit_intercept  = TRUE,
     fit_solver     = "direct",
     penalty        = "none",
-    alpha          = 0.0
+    alpha          = 0.0,
+    marginal_weights = NULL
 ) {
   py <- .weightederm_py()
   X_py <- .to_numpy_matrix(X)
@@ -85,7 +88,11 @@ werm_least_squares <- function(
     penalty       = penalty,
     alpha         = as.numeric(alpha)
   )
-  py_model$fit(X_py, y_py)
+  if (is.null(marginal_weights)) {
+    py_model$fit(X_py, y_py)
+  } else {
+    py_model$fit(X_py, y_py, marginal_weights = .to_numpy_matrix(marginal_weights))
+  }
 
   attrs <- .extract_fixed_attrs(py_model)
   .build_werm_object(attrs, "least_squares", py_model)
@@ -135,13 +142,14 @@ werm_huber <- function(
     X, y,
     num_chgpts,
     delta         = 1L,
-    search_method = "efficient",
+    search_method = "dp",
     fit_intercept = TRUE,
     epsilon       = 1.35,
     max_iter      = 100L,
     tol           = 1e-5,
     penalty       = "none",
-    alpha         = 0.0
+    alpha         = 0.0,
+    marginal_weights = NULL
 ) {
   py <- .weightederm_py()
   X_py <- .to_numpy_matrix(X)
@@ -158,7 +166,11 @@ werm_huber <- function(
     penalty       = penalty,
     alpha         = as.numeric(alpha)
   )
-  py_model$fit(X_py, y_py)
+  if (is.null(marginal_weights)) {
+    py_model$fit(X_py, y_py)
+  } else {
+    py_model$fit(X_py, y_py, marginal_weights = .to_numpy_matrix(marginal_weights))
+  }
 
   attrs <- .extract_fixed_attrs(py_model)
   .build_werm_object(attrs, "huber", py_model)
@@ -215,12 +227,13 @@ werm_logistic <- function(
     X, y,
     num_chgpts,
     delta         = 1L,
-    search_method = "efficient",
+    search_method = "dp",
     fit_intercept = TRUE,
     max_iter      = 100L,
     tol           = 1e-5,
     penalty       = "l2",
-    alpha         = 1.0
+    alpha         = 1.0,
+    marginal_weights = NULL
 ) {
   py <- .weightederm_py()
   X_py <- .to_numpy_matrix(X)
@@ -236,7 +249,11 @@ werm_logistic <- function(
     penalty       = penalty,
     alpha         = as.numeric(alpha)
   )
-  py_model$fit(X_py, y_py)
+  if (is.null(marginal_weights)) {
+    py_model$fit(X_py, y_py)
+  } else {
+    py_model$fit(X_py, y_py, marginal_weights = .to_numpy_matrix(marginal_weights))
+  }
 
   attrs <- .extract_fixed_attrs(py_model)
   attrs$classes <- as.character(reticulate::py_to_r(py_model$classes_))

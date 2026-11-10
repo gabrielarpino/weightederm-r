@@ -32,7 +32,10 @@ test_that("example availability recognises attributes on a live Python module", 
     dirname(source_root),
     "weightederm", ".venv", "bin", "python"
   )
-  skip_if_not(file.exists(python_path), "project Python virtualenv not found")
+  if (nzchar(Sys.getenv("RETICULATE_PYTHON"))) {
+    python_path <- Sys.getenv("RETICULATE_PYTHON")
+  }
+  skip_if_not(file.exists(python_path), "configured Python interpreter not found")
 
   reticulate::use_python(python_path, required = TRUE)
   skip_if_not(

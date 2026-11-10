@@ -17,7 +17,7 @@ PYTHON_PATH <- file.path(
   "weightederm", ".venv", "bin", "python"
 )
 
-if (file.exists(PYTHON_PATH)) {
+if (!nzchar(Sys.getenv("RETICULATE_PYTHON")) && file.exists(PYTHON_PATH)) {
   reticulate::use_python(PYTHON_PATH, required = TRUE)
 } else {
   # Fall back: let reticulate find whatever Python it can

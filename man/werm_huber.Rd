@@ -9,13 +9,14 @@ werm_huber(
   y,
   num_chgpts,
   delta = 1L,
-  search_method = "efficient",
+  search_method = "dp",
   fit_intercept = TRUE,
   epsilon = 1.35,
   max_iter = 100L,
   tol = 1e-05,
   penalty = "none",
-  alpha = 0
+  alpha = 0,
+  marginal_weights = NULL
 )
 }
 \arguments{
@@ -28,7 +29,7 @@ werm_huber(
 \item{delta}{Integer. Minimum gap between candidate changepoints during
 search. Default \code{1}. Rule of thumb: \code{max(1L, as.integer(0.05 * nrow(X)))}.}
 
-\item{search_method}{Character. \code{"efficient"} (default) or \code{"brute_force"}.}
+\item{search_method}{Character. \code{"dp"} (default), \code{"efficient"} (legacy greedy), or \code{"brute_force"}.}
 
 \item{fit_intercept}{Logical. Whether each segment model includes an
 intercept. Default \code{TRUE}.}
@@ -41,6 +42,9 @@ intercept. Default \code{TRUE}.}
 \item{tol}{Numeric. Gradient-norm tolerance. Default \code{1e-5}.}
 
 \item{penalty}{Character. \code{"none"} (default), \code{"l1"}, or \code{"l2"}.}
+
+\item{marginal_weights}{Optional signal-by-observation occupancy probabilities.
+Columns sum to one; supplied rows are normalized for coefficient fitting.}
 
 \item{alpha}{Numeric. Penalty strength. Default \code{0}.}
 }

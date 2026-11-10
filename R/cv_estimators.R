@@ -12,7 +12,7 @@
 #' @param max_num_chgpts Integer. Upper bound of the CV search grid.
 #' @param delta Integer. Minimum gap between candidate changepoints.
 #'   Default `1`.
-#' @param search_method Character. `"efficient"` (default) or `"brute_force"`.
+#' @param search_method Character. `"dp"` (default), `"efficient"` (legacy greedy), or `"brute_force"`.
 #' @param cv Integer. Number of interleaved folds. Default `5`.
 #' @param fit_intercept Logical. Default `TRUE`.
 #' @param use_base_loss_for_cv Logical. If `TRUE`, uses squared loss for CV
@@ -20,6 +20,8 @@
 #'   Default `FALSE`.
 #' @param penalty Character. Passed to the inner fixed model. Default `"none"`.
 #' @param alpha Numeric. Penalty strength. Default `0`.
+#' @param regularization_constants Optional nonnegative constants for joint count/penalty CV.
+#' @param delta_fraction Optional fold-local spacing fraction; requires joint CV and delta=1.
 #'
 #' @return An object of class `c("werm_least_squares_cv", "werm_fit")` with all
 #'   elements from [werm_least_squares()] plus:
@@ -67,12 +69,14 @@ werm_least_squares_cv <- function(
     X, y,
     max_num_chgpts,
     delta                = 1L,
-    search_method        = "efficient",
+    search_method        = "dp",
     cv                   = 5L,
     fit_intercept        = TRUE,
     use_base_loss_for_cv = FALSE,
     penalty              = "none",
-    alpha                = 0.0
+    alpha                = 0.0,
+    regularization_constants = NULL,
+    delta_fraction = NULL
 ) {
   py <- .weightederm_py()
   X_py <- .to_numpy_matrix(X)
@@ -86,7 +90,9 @@ werm_least_squares_cv <- function(
     fit_intercept        = fit_intercept,
     use_base_loss_for_cv = use_base_loss_for_cv,
     penalty              = penalty,
-    alpha                = as.numeric(alpha)
+    alpha                = as.numeric(alpha),
+    regularization_constants = if (is.null(regularization_constants)) NULL else as.list(as.numeric(regularization_constants)),
+    delta_fraction = delta_fraction
   )
   py_model$fit(X_py, y_py)
 
@@ -134,7 +140,7 @@ werm_huber_cv <- function(
     X, y,
     max_num_chgpts,
     delta                = 1L,
-    search_method        = "efficient",
+    search_method        = "dp",
     cv                   = 5L,
     fit_intercept        = TRUE,
     epsilon              = 1.35,
@@ -142,7 +148,9 @@ werm_huber_cv <- function(
     tol                  = 1e-5,
     use_base_loss_for_cv = FALSE,
     penalty              = "none",
-    alpha                = 0.0
+    alpha                = 0.0,
+    regularization_constants = NULL,
+    delta_fraction = NULL
 ) {
   py <- .weightederm_py()
   X_py <- .to_numpy_matrix(X)
@@ -159,7 +167,9 @@ werm_huber_cv <- function(
     tol                  = as.numeric(tol),
     use_base_loss_for_cv = use_base_loss_for_cv,
     penalty              = penalty,
-    alpha                = as.numeric(alpha)
+    alpha                = as.numeric(alpha),
+    regularization_constants = if (is.null(regularization_constants)) NULL else as.list(as.numeric(regularization_constants)),
+    delta_fraction = delta_fraction
   )
   py_model$fit(X_py, y_py)
 
@@ -214,14 +224,16 @@ werm_logistic_cv <- function(
     X, y,
     max_num_chgpts,
     delta                = 1L,
-    search_method        = "efficient",
+    search_method        = "dp",
     cv                   = 5L,
     fit_intercept        = TRUE,
     max_iter             = 100L,
     tol                  = 1e-5,
     use_base_loss_for_cv = FALSE,
     penalty              = "l2",
-    alpha                = 1.0
+    alpha                = 1.0,
+    regularization_constants = NULL,
+    delta_fraction = NULL
 ) {
   py <- .weightederm_py()
   X_py <- .to_numpy_matrix(X)
@@ -237,7 +249,9 @@ werm_logistic_cv <- function(
     tol                  = as.numeric(tol),
     use_base_loss_for_cv = use_base_loss_for_cv,
     penalty              = penalty,
-    alpha                = as.numeric(alpha)
+    alpha                = as.numeric(alpha),
+    regularization_constants = if (is.null(regularization_constants)) NULL else as.list(as.numeric(regularization_constants)),
+    delta_fraction = delta_fraction
   )
   py_model$fit(X_py, y_py)
 

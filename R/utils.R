@@ -113,6 +113,15 @@
   bounds_1idx <- lapply(bounds_raw, function(b) c(b[[1]] + 1L, b[[2]]))
 
   cv_results_raw <- reticulate::py_to_r(py_model$cv_results_)
+  cv_table <- data.frame(
+    num_chgpts = as.integer(cv_results_raw$num_chgpts),
+    mean_test_score = as.numeric(cv_results_raw$mean_test_score)
+  )
+  if (!is.null(cv_results_raw$regularization_constant)) {
+    cv_table$regularization_constant <- as.numeric(cv_results_raw$regularization_constant)
+    base$best_regularization_constant <- as.numeric(py_model$best_regularization_constant_)
+    base$alpha <- as.numeric(py_model$alpha_)
+  }
 
   c(
     base,
@@ -120,10 +129,7 @@
       best_num_chgpts   = as.integer(reticulate::py_to_r(py_model$best_num_chgpts_)),
       best_index        = as.integer(reticulate::py_to_r(py_model$best_index_)) + 1L,
       best_score        = as.numeric(reticulate::py_to_r(py_model$best_score_)),
-      cv_results        = data.frame(
-        num_chgpts      = as.integer(cv_results_raw$num_chgpts),
-        mean_test_score = as.numeric(cv_results_raw$mean_test_score)
-      ),
+      cv_results        = cv_table,
       num_chgpts_grid   = as.integer(reticulate::py_to_r(py_model$num_chgpts_grid_)),
       segment_bounds    = bounds_1idx,
       segment_coefs     = reticulate::py_to_r(py_model$segment_coefs_),

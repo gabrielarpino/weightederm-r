@@ -43,7 +43,7 @@ Six estimators are available:
 This package calls Python via [reticulate](https://rstudio.github.io/reticulate/).
 You need:
 
-1. **Python ≥ 3.9** — install from <https://www.python.org/> or via conda/pyenv.
+1. **Python ≥ 3.10** — install from <https://www.python.org/> or via conda/pyenv.
 2. **The `weightederm` Python package:**
 
 ```bash
@@ -51,6 +51,9 @@ pip install git+https://github.com/gabrielarpino/weightederm.git
 ```
 
 ## Installation
+
+The GitHub version below includes the method updates described in this README.
+A published CRAN release may have an older API.
 
 ### From CRAN
 
@@ -72,12 +75,35 @@ Or with `remotes`:
 remotes::install_github("gabrielarpino/weightederm-r")
 ```
 
+### From a local clone
+
+Install the Python backend first using Python 3.10 or newer:
+
+```bash
+python -m venv .venv
+# macOS/Linux:
+source .venv/bin/activate
+# Windows PowerShell instead: .venv\Scripts\Activate.ps1
+python -m pip install "git+https://github.com/gabrielarpino/weightederm.git"
+git clone https://github.com/gabrielarpino/weightederm-r.git
+cd weightederm-r
+Rscript -e 'install.packages("reticulate", repos="https://cloud.r-project.org")'
+R CMD INSTALL .
+```
+
+Set `RETICULATE_PYTHON` to the **absolute path** of that environment's Python
+(`.venv/bin/python` on macOS/Linux, `.venv/Scripts/python.exe` on Windows),
+or use the configuration function below before fitting. The R package calls
+Python and therefore requires both installations.
+
 ## Pointing to your Python environment
 
 By default, `reticulate` auto-discovers Python. If it picks the wrong one, call
 `weightederm_configure_python()` **before** your first model fit:
 
 ```r
+library(weightederm)
+
 # Option 1 — point to a specific Python binary
 weightederm_configure_python(python = "/path/to/your/venv/bin/python")
 
@@ -111,12 +137,13 @@ y[1:true_cp]          <- X[1:true_cp, ]          %*% beta_left  + rnorm(true_cp,
 y[(true_cp+1):n]      <- X[(true_cp+1):n, ]      %*% beta_right + rnorm(n - true_cp, sd = 0.2)
 
 fit <- werm_least_squares(X, y, num_chgpts = 1L, delta = 5L,
-                          search_method = "efficient", fit_intercept = FALSE)
+                          search_method = "dp", fit_intercept = FALSE)
 fit
-#> WERM Changepoint Estimator (werm_least_squares)
-#>   Changepoints (1-indexed): 60
-#>   num_chgpts: 1 | num_signals: 2 | n_features_in: 20
-#>   Objective: ...
+#> WERM Changepoint Estimator  Least Squares
+#>   Changepoints : 62 (1-indexed)
+#>   num_chgpts   : 1
+#>   num_signals  : 2
+#>   objective    : 241.375
 ```
 
 ### M2 — unknown number of changepoints via cross-validation
@@ -136,7 +163,7 @@ y[61:120]  <- X[61:120, ]  %*% beta_2 + rnorm(60, sd = 0.05)
 y[121:180] <- X[121:180, ] %*% beta_3 + rnorm(60, sd = 0.05)
 
 fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, delta = 5L, cv = 3L,
-                              search_method = "efficient", fit_intercept = FALSE)
+                              search_method = "dp", fit_intercept = FALSE)
 fit$best_num_chgpts  # 2
 fit$changepoints     # near c(60, 120)
 fit$cv_results       # data.frame of num_chgpts vs mean_test_score
@@ -158,7 +185,7 @@ eta[(true_cp+1):n]   <- X[(true_cp+1):n, ]   %*% beta_right
 y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
 
 fit <- werm_logistic(X, y, num_chgpts = 1L, delta = 5L,
-                     search_method = "efficient", fit_intercept = FALSE,
+                     search_method = "dp", fit_intercept = FALSE,
                      max_iter = 300L)
 fit$changepoints   # near 80
 fit$classes        # c("0", "1")
@@ -176,7 +203,7 @@ predict(fit, X_new, type = "class")  # character vector of labels
 | `num_chgpts`       | Number of changepoints (fixed estimators)                           | required  |
 | `max_num_chgpts`   | Upper bound for CV search (CV estimators)                           | required  |
 | `delta`            | Minimum gap between changepoints during search                      | `1L`      |
-| `search_method`    | `"efficient"` (greedy + local refinement) or `"brute_force"`        | `"efficient"` |
+| `search_method`    | `"dp"` (exact), `"efficient"` (legacy greedy), or `"brute_force"` | `"dp"` |
 | `fit_intercept`    | Include per-segment intercept                                        | `TRUE`    |
 | `cv`               | Number of interleaved CV folds (CV estimators)                       | `5L`      |
 | `penalty`          | `"none"`, `"l1"`, or `"l2"`                                         | `"none"` (`"l2"` for logistic) |
@@ -222,3 +249,20 @@ predict(fit, X_new)  # numeric predictions (regression) or class labels / probab
 ## License
 
 Apache License 2.0 — the same license as the underlying Python package.
+
+### Method updates
+
+The wrappers require Python `weightederm >= 0.2.0`. Search now defaults to exact
+`search_method = "dp"`; explicit `"efficient"` retains legacy greedy behavior.
+Positive L1 penalties use the Python proximal solver.
+
+Fixed estimators accept `marginal_weights`, a signal-by-observation occupancy
+matrix with unit column sums and positive row sums. CV estimators accept
+`regularization_constants` for exhaustive joint count/penalty selection and
+optional `delta_fraction` for fold-local spacing. Joint results include
+`best_regularization_constant`, `alpha`, and a `regularization_constant` column
+in `cv_results`. Existing CV behavior remains when the new grid is `NULL`.
+
+Automatic research-code prior extrapolation is not included. Supplied reference
+marginals support fixed-count comparisons; joint CV uses exact uniform
+count-specific marginals. See the Python README for normalization and scaling.

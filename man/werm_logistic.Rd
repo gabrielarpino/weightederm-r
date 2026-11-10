@@ -9,12 +9,13 @@ werm_logistic(
   y,
   num_chgpts,
   delta = 1L,
-  search_method = "efficient",
+  search_method = "dp",
   fit_intercept = TRUE,
   max_iter = 100L,
   tol = 1e-05,
   penalty = "l2",
-  alpha = 1
+  alpha = 1,
+  marginal_weights = NULL
 )
 }
 \arguments{
@@ -27,7 +28,7 @@ werm_logistic(
 \item{delta}{Integer. Minimum gap between candidate changepoints during
 search. Default \code{1}. Rule of thumb: \code{max(1L, as.integer(0.05 * nrow(X)))}.}
 
-\item{search_method}{Character. \code{"efficient"} (default) or \code{"brute_force"}.}
+\item{search_method}{Character. \code{"dp"} (default), \code{"efficient"} (legacy greedy), or \code{"brute_force"}.}
 
 \item{fit_intercept}{Logical. Whether each segment model includes an
 intercept. Default \code{TRUE}.}
@@ -38,6 +39,9 @@ intercept. Default \code{TRUE}.}
 
 \item{penalty}{Character. Default \code{"l2"} (prevents divergence on separable
 segments). Set \code{"none"} only when segments are not separable.}
+
+\item{marginal_weights}{Optional signal-by-observation occupancy probabilities.
+Columns sum to one; supplied rows are normalized for coefficient fitting.}
 
 \item{alpha}{Numeric. Default \code{1.0}.}
 }

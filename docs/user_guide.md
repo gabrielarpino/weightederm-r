@@ -41,8 +41,9 @@ This produces `L + 1` coefficient vectors (`$signal_coefs`) and optionally
 
 The goodness-of-fit score for a specific configuration `(eta_1, ..., eta_L)` is a
 weighted combination of segment-level losses evaluated at the Stage 1 coefficients.
-The optimal configuration is found by **`"efficient"`** greedy + local-refinement
-search (default) or **`"brute_force"`** enumeration (exact, slow).
+The optimal configuration is found by **`"dp"`** exact dynamic programming
+(default). Legacy **`"efficient"`** greedy search and **`"brute_force"`** enumeration
+remain available.
 
 ---
 

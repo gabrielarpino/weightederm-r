@@ -9,12 +9,14 @@ werm_least_squares_cv(
   y,
   max_num_chgpts,
   delta = 1L,
-  search_method = "efficient",
+  search_method = "dp",
   cv = 5L,
   fit_intercept = TRUE,
   use_base_loss_for_cv = FALSE,
   penalty = "none",
-  alpha = 0
+  alpha = 0,
+  regularization_constants = NULL,
+  delta_fraction = NULL
 )
 }
 \arguments{
@@ -27,7 +29,7 @@ werm_least_squares_cv(
 \item{delta}{Integer. Minimum gap between candidate changepoints.
 Default \code{1}.}
 
-\item{search_method}{Character. \code{"efficient"} (default) or \code{"brute_force"}.}
+\item{search_method}{Character. \code{"dp"} (default), \code{"efficient"} (legacy greedy), or \code{"brute_force"}.}
 
 \item{cv}{Integer. Number of interleaved folds. Default \code{5}.}
 
@@ -38,6 +40,10 @@ segment fits and scoring instead of the default absolute error.
 Default \code{FALSE}.}
 
 \item{penalty}{Character. Passed to the inner fixed model. Default \code{"none"}.}
+
+\item{regularization_constants}{Optional nonnegative constants for joint count/penalty CV.}
+
+\item{delta_fraction}{Optional fold-local spacing fraction; requires joint CV and delta=1.}
 
 \item{alpha}{Numeric. Penalty strength. Default \code{0}.}
 }

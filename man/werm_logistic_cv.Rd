@@ -9,14 +9,16 @@ werm_logistic_cv(
   y,
   max_num_chgpts,
   delta = 1L,
-  search_method = "efficient",
+  search_method = "dp",
   cv = 5L,
   fit_intercept = TRUE,
   max_iter = 100L,
   tol = 1e-05,
   use_base_loss_for_cv = FALSE,
   penalty = "l2",
-  alpha = 1
+  alpha = 1,
+  regularization_constants = NULL,
+  delta_fraction = NULL
 )
 }
 \arguments{
@@ -29,7 +31,7 @@ werm_logistic_cv(
 \item{delta}{Integer. Minimum gap between candidate changepoints.
 Default \code{1}.}
 
-\item{search_method}{Character. \code{"efficient"} (default) or \code{"brute_force"}.}
+\item{search_method}{Character. \code{"dp"} (default), \code{"efficient"} (legacy greedy), or \code{"brute_force"}.}
 
 \item{cv}{Integer. Number of interleaved folds. Default \code{5}.}
 
@@ -43,6 +45,10 @@ Default \code{1}.}
 segment scoring instead of the default absolute error. Default \code{FALSE}.}
 
 \item{penalty}{Character. Default \code{"l2"}.}
+
+\item{regularization_constants}{Optional nonnegative constants for joint count/penalty CV.}
+
+\item{delta_fraction}{Optional fold-local spacing fraction; requires joint CV and delta=1.}
 
 \item{alpha}{Numeric. Default \code{1.0}.}
 }

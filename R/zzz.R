@@ -32,6 +32,10 @@
       }
     )
   }
+  version <- .werm_env$module$`__version__`
+  if (is.null(version) || utils::compareVersion(as.character(version), "0.2.0") < 0L) {
+    stop("Install Python weightederm >= 0.2.0 for exact DP and joint CV support.", call. = FALSE)
+  }
   .werm_env$module
 }
 
