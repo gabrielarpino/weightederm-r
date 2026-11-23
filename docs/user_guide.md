@@ -101,7 +101,7 @@ stopifnot(length(fit$changepoints) == 1L)
 Use when the number of changepoints is unknown. The CV estimator:
 
 1. Tries every `num_chgpts` in `{0, 1, …, max_num_chgpts}`.
-2. For each candidate, runs `cv`-fold interleaved cross-validation.
+2. For each candidate, runs `cv`-fold interleaved cross-validation. The default is 10 folds without a coefficient penalty (`penalty="none"`) and 2 with `l1` or `l2`; set `cv` explicitly to override.
 3. Selects the candidate with the lowest mean held-out loss.
 4. Refits the selected model on the full dataset.
 
@@ -110,7 +110,7 @@ Use when the number of changepoints is unknown. The CV estimator:
 library(weightederm)
 X <- matrix(1, nrow = 80L, ncol = 2L)
 y <- c(rep(0, 40L), rep(1, 40L))
-fit <- werm_least_squares_cv(X, y, max_num_chgpts = 3L, cv = 4L, delta = 5L,
+fit <- werm_least_squares_cv(X, y, max_num_chgpts = 3L, cv = 10L, delta = 5L,
                               fit_intercept = FALSE)
 stopifnot(fit$best_num_chgpts == 1L)
 stopifnot("mean_test_score" %in% names(fit$cv_results))
@@ -133,7 +133,7 @@ error** (more robust than squared error for model selection). To use the
 estimator's base loss instead set `use_base_loss_for_cv = TRUE`:
 
 ```r
-# fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 3L,
+# fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 10L,
 #                               use_base_loss_for_cv = TRUE)
 ```
 

@@ -10,7 +10,7 @@ werm_least_squares_cv(
   max_num_chgpts,
   delta = 1L,
   search_method = "dp",
-  cv = 5L,
+  cv = NULL,
   fit_intercept = TRUE,
   use_base_loss_for_cv = FALSE,
   penalty = "none",
@@ -31,7 +31,9 @@ Default \code{1}.}
 
 \item{search_method}{Character. \code{"dp"} (default), \code{"efficient"} (legacy greedy), or \code{"brute_force"}.}
 
-\item{cv}{Integer. Number of interleaved folds. Default \code{5}.}
+\item{cv}{Integer or \code{NULL}. Number of interleaved folds. Default \code{NULL}
+selects 10 for \code{penalty = "none"} and 2 for \code{"l1"} or \code{"l2"}.
+An explicit integer overrides this default.}
 
 \item{fit_intercept}{Logical. Default \code{TRUE}.}
 
@@ -86,7 +88,7 @@ if (nzchar(Sys.getenv("RETICULATE_PYTHON")) &&
     X[11:20, ] \%*\% c(-3.5, 0),
     X[21:30, ] \%*\% c(3.5, 0)
   ) + rnorm(n, sd = 0.05)
-  fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 3L,
+  fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L,
                                delta = 3L, fit_intercept = FALSE)
   fit$best_num_chgpts
   fit$changepoints

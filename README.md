@@ -52,7 +52,7 @@ pip install git+https://github.com/gabrielarpino/weightederm.git
 
 ## Installation
 
-The GitHub version below includes the method updates described in this README.
+The GitHub version below includes the changes described in [method updates](docs/method_updates.md).
 A published CRAN release may have an older API.
 
 ### From CRAN
@@ -146,6 +146,9 @@ fit
 #>   objective    : 241.375
 ```
 
+CV defaults to 10 folds for `penalty="none"` and 2 for `penalty="l1"` or
+`"l2"`. Set `cv` explicitly to override.
+
 ### M2 — unknown number of changepoints via cross-validation
 
 ```r
@@ -162,7 +165,7 @@ y[1:60]    <- X[1:60, ]    %*% beta_1 + rnorm(60, sd = 0.05)
 y[61:120]  <- X[61:120, ]  %*% beta_2 + rnorm(60, sd = 0.05)
 y[121:180] <- X[121:180, ] %*% beta_3 + rnorm(60, sd = 0.05)
 
-fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, delta = 5L, cv = 3L,
+fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, delta = 5L, cv = 10L,
                               search_method = "dp", fit_intercept = FALSE)
 fit$best_num_chgpts  # 2
 fit$changepoints     # near c(60, 120)
@@ -205,7 +208,7 @@ predict(fit, X_new, type = "class")  # character vector of labels
 | `delta`            | Minimum gap between changepoints during search                      | `1L`      |
 | `search_method`    | `"dp"` (exact), `"efficient"` (legacy greedy), or `"brute_force"` | `"dp"` |
 | `fit_intercept`    | Include per-segment intercept                                        | `TRUE`    |
-| `cv`               | Number of interleaved CV folds (CV estimators)                       | `5L`      |
+| `cv`               | Number of interleaved CV folds (CV estimators)                       | `NULL`: 10 for `"none"`, 2 for `"l1"`/`"l2"` |
 | `penalty`          | `"none"`, `"l1"`, or `"l2"`                                         | `"none"` (`"l2"` for logistic) |
 | `alpha`            | Penalty strength                                                     | `0.0`     |
 | `epsilon`          | Huber transition parameter                                           | `1.35`    |
@@ -250,19 +253,4 @@ predict(fit, X_new)  # numeric predictions (regression) or class labels / probab
 
 Apache License 2.0 — the same license as the underlying Python package.
 
-### Method updates
-
-The wrappers require Python `weightederm >= 0.2.0`. Search now defaults to exact
-`search_method = "dp"`; explicit `"efficient"` retains legacy greedy behavior.
-Positive L1 penalties use the Python proximal solver.
-
-Fixed estimators accept `marginal_weights`, a signal-by-observation occupancy
-matrix with unit column sums and positive row sums. CV estimators accept
-`regularization_constants` for exhaustive joint count/penalty selection and
-optional `delta_fraction` for fold-local spacing. Joint results include
-`best_regularization_constant`, `alpha`, and a `regularization_constant` column
-in `cv_results`. Existing CV behavior remains when the new grid is `NULL`.
-
-Automatic research-code prior extrapolation is not included. Supplied reference
-marginals support fixed-count comparisons; joint CV uses exact uniform
-count-specific marginals. See the Python README for normalization and scaling.
+See [method updates](docs/method_updates.md) for details of the 0.2.0 changes.

@@ -13,7 +13,9 @@
 #' @param delta Integer. Minimum gap between candidate changepoints.
 #'   Default `1`.
 #' @param search_method Character. `"dp"` (default), `"efficient"` (legacy greedy), or `"brute_force"`.
-#' @param cv Integer. Number of interleaved folds. Default `5`.
+#' @param cv Integer or `NULL`. Number of interleaved folds. Default `NULL`
+#'   selects 10 for `penalty = "none"` and 2 for `"l1"` or `"l2"`.
+#'   An explicit integer overrides this default.
 #' @param fit_intercept Logical. Default `TRUE`.
 #' @param use_base_loss_for_cv Logical. If `TRUE`, uses squared loss for CV
 #'   segment fits and scoring instead of the default absolute error.
@@ -57,7 +59,7 @@
 #'     X[11:20, ] %*% c(-3.5, 0),
 #'     X[21:30, ] %*% c(3.5, 0)
 #'   ) + rnorm(n, sd = 0.05)
-#'   fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L, cv = 3L,
+#'   fit <- werm_least_squares_cv(X, y, max_num_chgpts = 2L,
 #'                                delta = 3L, fit_intercept = FALSE)
 #'   fit$best_num_chgpts
 #'   fit$changepoints
@@ -70,7 +72,7 @@ werm_least_squares_cv <- function(
     max_num_chgpts,
     delta                = 1L,
     search_method        = "dp",
-    cv                   = 5L,
+    cv                   = NULL,
     fit_intercept        = TRUE,
     use_base_loss_for_cv = FALSE,
     penalty              = "none",
@@ -86,7 +88,7 @@ werm_least_squares_cv <- function(
     max_num_chgpts       = as.integer(max_num_chgpts),
     delta                = as.integer(delta),
     search_method        = search_method,
-    cv                   = as.integer(cv),
+    cv                   = if (is.null(cv)) NULL else as.integer(cv),
     fit_intercept        = fit_intercept,
     use_base_loss_for_cv = use_base_loss_for_cv,
     penalty              = penalty,
@@ -130,7 +132,7 @@ werm_least_squares_cv <- function(
 #'     X[9:16, ] %*% c(-4, 0),
 #'     X[17:24, ] %*% c(4, 0)
 #'   ) + rnorm(n, sd = 0.02)
-#'   fit <- werm_huber_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 2L,
+#'   fit <- werm_huber_cv(X, y, max_num_chgpts = 2L, delta = 2L,
 #'                        fit_intercept = FALSE, max_iter = 20L)
 #'   fit$best_num_chgpts
 #' }
@@ -141,7 +143,7 @@ werm_huber_cv <- function(
     max_num_chgpts,
     delta                = 1L,
     search_method        = "dp",
-    cv                   = 5L,
+    cv                   = NULL,
     fit_intercept        = TRUE,
     epsilon              = 1.35,
     max_iter             = 100L,
@@ -160,7 +162,7 @@ werm_huber_cv <- function(
     max_num_chgpts       = as.integer(max_num_chgpts),
     delta                = as.integer(delta),
     search_method        = search_method,
-    cv                   = as.integer(cv),
+    cv                   = if (is.null(cv)) NULL else as.integer(cv),
     fit_intercept        = fit_intercept,
     epsilon              = as.numeric(epsilon),
     max_iter             = as.integer(max_iter),
@@ -213,7 +215,7 @@ werm_huber_cv <- function(
 #'     X[21:30, ] %*% c(3, -3)
 #'   )
 #'   y <- rbinom(n, 1L, 1 / (1 + exp(-eta)))
-#'   fit <- werm_logistic_cv(X, y, max_num_chgpts = 2L, cv = 3L, delta = 3L,
+#'   fit <- werm_logistic_cv(X, y, max_num_chgpts = 2L, delta = 3L,
 #'                           fit_intercept = FALSE, max_iter = 100L)
 #'   fit$best_num_chgpts
 #'   fit$changepoints
@@ -225,7 +227,7 @@ werm_logistic_cv <- function(
     max_num_chgpts,
     delta                = 1L,
     search_method        = "dp",
-    cv                   = 5L,
+    cv                   = NULL,
     fit_intercept        = TRUE,
     max_iter             = 100L,
     tol                  = 1e-5,
@@ -243,7 +245,7 @@ werm_logistic_cv <- function(
     max_num_chgpts       = as.integer(max_num_chgpts),
     delta                = as.integer(delta),
     search_method        = search_method,
-    cv                   = as.integer(cv),
+    cv                   = if (is.null(cv)) NULL else as.integer(cv),
     fit_intercept        = fit_intercept,
     max_iter             = as.integer(max_iter),
     tol                  = as.numeric(tol),
